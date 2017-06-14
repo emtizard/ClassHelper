@@ -1,0 +1,198 @@
+<!-- The purpose of the home page (Course page) is to add courses. Once the course is added, the user has the ability
+     to access the roster, attendance, graph and editing the course.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="#">
+  <!-- Everything inside the block style is CSS (Cascading Style Sheets), which is is computer language responsible
+	   for formatting the language. -->
+  <!-- To find out where the formatting is done, search for the class or id within the tags (class = .)(id = #) -->
+  <style type="text/css">
+
+    #home_button {
+		height:90px;
+		width:200px;
+    display: none;
+		alt: The home button will be displayed, but will not do anything because the user is already in the home page;
+	}
+	#logout_button {
+		float:right;
+		alt:Submit;
+		height:50px;
+		width:200px;
+		alt: The logout button will navigate the user back to the login page.;
+	}
+	#help_button {
+		alt:Submit;
+		height:45px;
+		width:200px;
+		alt: The help button will navigate the user to the help page which will explain what things do in the page;
+	}
+    h1 {
+      font-family: "Copperplate Gothic Light";
+      font-size: 30px;
+      font-style: normal;
+      font-variant: normal;
+      font-weight: 1250;
+      line-height: 36.4px;
+      color: white;
+      text-align: center;
+      text-align: left;
+      alt: The page will display the course names in a specific formatting;
+      /*text-transform: uppercase; */
+    }
+    .container {
+      clear: left;
+      display: flex;
+      background: #869375;
+      padding: 30px;
+      margin: 25px;
+      white-space: nowrap;
+      height: auto;
+      width: auto;
+      alt: Basically all the content from the page will be formatted to a specific location.
+		   The page should adjust accordingly.;
+    }
+    .course-container {
+      padding: 5px;
+      float: left;
+      clear: left;
+      display: inline-block;
+      background: #4b5143;
+      white-space: nowrap;
+      width: 100%;
+      height: auto;
+      alt: Basically all the content from the page will be formatted to a specific location.
+		   The page should adjust accordingly.;
+    }
+    #add_course_button {
+      padding: 5px;
+      display: inline-block;
+      height: 100px;
+      alt: The add course button will navigate the user to the add course page where adding the course will happen.;
+    }
+    .roster_button, .attendance_button, .edit_course_button {
+      height: 40px;
+	  width: 150px;
+	  color: white;
+	  background-color:#384130;
+	  font-size:20px;
+	  alt: formatting the buttons for roster, attendance and edit course.;
+	}
+	@media only screen and (max-width: 768px) {
+        /* For mobile phones: */
+        h1 {
+          font-size: 15px;
+          alt: formatted the course title for the mobile version.;
+        }
+        .roster_button, .attendance_button, .edit_course_button {
+          height: 25px;
+	      width: 85px;
+	      color: white;
+	      background-color:#384130;
+	      font-size:10px;
+	      alt: formatted the roster, attendance and edit course button for the mobile version.;
+	    }
+	    .container {
+	      width: 70%;
+	     }
+	    #help_button {
+		  height: 30px;
+		  width: 100px;
+		  alt: formatted the help button for the mobile version.;
+		}
+		#logout_button {
+		  float:right;
+		  alt:Submit;
+		  height:25px;
+		  width:100px;
+		  alt: formatted the logout button for the mobile version.;
+		}
+		#home_button {
+		  alt:Submit;
+		  height:45px;
+		  width:100px;
+		  alt: formatted the home button for the mobile version.;
+		}
+		#add_course_button {
+          height: 50px;
+          alt: formatted the add course button for the mobile version.;
+        }
+        .placeholder {
+          background-color: red;
+          width: 80px;
+          alt: This placeholder icon is used to center the home button.;
+        }
+  }
+
+
+  </style>
+  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+</head>
+<body bgcolor="#384130">
+
+<!-- Setting up the back, home and logout button -->
+<div id="top">
+  {% load static %}
+  <div class="back">
+  {% load static %}
+  <input id="back_button" onclick="window.history.back()" type="image" src="{% static 'posts/back_button.png' %}" alt="Brings
+  the user to previous page" style="float: left" height="90" width="200"></a>
+  </div>
+
+  <div class="logout">
+    {% load static %}
+    <center><a href="/CHproto/logout"><input type="image" src="{% static 'posts/logout.jpg' %}" alt=
+      "Logs the user out" style="float: right" height="65" width=
+      "150"></a></center>
+  </div>
+
+</div>
+
+<!-- This for loop is responsible to display the courses added by the user. It will go over all the courses added from
+     the database which is connected to the specific user -->
+{% if all_user_courses %}
+  {% for course in all_user_courses %}
+
+  <div class="container">
+      <br><br<br>
+    <h1>{{ course.name }}</h1>
+    <div class="buttons">
+      <!-- Display the roster, attendance and edit course button for each course -->
+      <a class="roster_button" href="/CHproto/{{ course.id }}/roster/"><input class="roster_button" type="submit" value="ROSTER"></input></a>
+
+      <a class="attendance_button" href="/CHproto/{{ course.id }}/attendance/"><input class="roster_button" type="submit" value="ATTENDANCE"></input></a>
+
+      <!--<input type="submit" value="graph"></input>-->
+      <a class="edit_course_button" href="/CHproto/{{ course.id }}/editcourse"><input class="roster_button" type="submit" value="EDIT COURSE"></input></a>
+      </div>
+  </div>
+
+  {% endfor %}
+{% endif %}
+
+  <!-- Setting up the add course button -->
+  <div class="container">
+    <div class="course-container">
+      <div>
+        {% load static %}
+        <a href="/CHproto/newcourse"><input id="add_course_button" type="image" src="{% static 'posts/add_course_button.png' %}"
+          alt="Button to add course"></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Setting up the help button -->
+  <div>
+    {% load static %}
+    <a href="/CHproto/help"><input id="help_button" type="image" src="{% static 'posts/help_button.png' %}" alt="Help button"></a>
+  </div>
+
+
+
+</body>
+</html>

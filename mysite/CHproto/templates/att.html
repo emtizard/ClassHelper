@@ -1,0 +1,461 @@
+<!-- The attendance page will display the attendance of students by month. The page will also display the attendance
+     by weeks for month 1, 2, 3 and 4. Month 1 will have week 1 to 4, month 2 will have week 5 to 8, month 3 will
+     have week 9 to 12 and month 4 will have week 13 to 16 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Class Helper</title>
+  <!-- Everything inside the block style is CSS (Cascading Style Sheets), which is is computer language responsible
+	   for formatting the language. -->
+  <!-- This page extends to the base.html page which has some formatting that will be used for all pages as
+	   default.-->
+  <!-- To find out where the formatting is done, search for the class or id within the tags (class = .)(id = #) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="#">
+  <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+  <style type="text/css">
+    #back_button {
+	  float:left;
+	  alt: Brings the user back to the previous page;
+	  height: 90px;
+	  width:200px;
+    }
+	#home_button {
+      alt: Brings the user back to the home page;
+	  height:90px;
+	  width:200px;
+    }
+	#logout_button {
+	  float:right;
+	  alt:Submit;
+	  height:50px;
+	  width:200px;
+	  alt: Brings the user back to the login page;
+    }
+	#help_button {
+	  alt:Submit;
+	  height:45px;
+	  width:200px;
+	  alt: Navigates the user to the help documents;
+	}
+    table {
+      border: 3px solid black;
+      border-collapse: collapse;
+      alt: Give black border to the table;
+    }
+    th, td {
+      border: 1px solid black;
+      width: auto;
+      background-color: white;
+      text-align: center;
+      border-collapse: collapse;
+      padding: 7.1px;
+    }
+    th {
+        background-color: #384130;
+        color: white;
+        alt: Give table headers a specific background color and text color;
+    }
+    h1 {
+      font-family: "Copperplate Gothic Light";
+      font-size: 24px;
+      font-style: normal;
+      font-variant: normal;
+      font-weight: 1250;
+      line-height: 36.4px;
+      color: white;
+      text-align: center;
+      alt: Give the page title a specific design;
+      /*text-transform: uppercase; */
+    }
+    .container {
+      float: none;
+      clear: left;
+      display: block;
+      background: #869375;
+      padding: 30px;
+      margin: 25px;
+      white-space: nowrap;
+      height: auto;
+      width: 70%;
+      alt: Formatting the page to specific display;
+    }
+    ul {
+      font-family: "Copperplate Gothic Light";
+      font-size: 20px;
+      font-style: normal;
+      font-variant: normal;
+      font-weight: 1250;
+      color: white;
+      text-align: center;
+    }
+    .submit_button {
+        height: 25px;
+	    width: 200px;
+		color: white;
+		background-color:#384130;
+		font-size:15px;
+		alt: formatted the add new attendance button;
+	}
+    @media only screen and (max-width: 768px) {
+        /* For mobile phones: */
+        h1 {
+          	display: none;
+          	alt: formatted so that the title fits mobile size;
+        }
+	    #help_button {
+		  	height: 30px;
+		  	width: 100px;
+		  	alt: formatted so that the help button fits mobile size;
+		}
+		#back_button {
+		  	height: 45px;
+		  	width: 100px;
+		  	alt: formatted so that the back_button fits mobile size;
+		}
+		#logout_button {
+		  	float:right;
+		  	alt:Submit;
+		  	height:25px;
+		  	width:100px;
+		  	alt: formatted so that the logout button fits mobile size;
+		}
+		#home_button {
+		  	height:45px;
+		  	width:100px;
+		  	alt: formatted so that the home button fits mobile size;
+		}
+		.submit_button {
+		    height: 25px;
+		    width: 75px;
+		    font-size:15px;
+		    alt: formatted so that the save button fits mobile size
+		}
+		table {
+		    display: block;
+            overflow: scroll;
+            overflow-y: auto;
+        }
+	}
+  </style>
+</head>
+
+<center><body bgcolor="#384130">
+
+  <div class="back">
+  {% load static %}
+  <input id="back_button" onclick="window.history.back()" type="image" src="{% static 'posts/back_button.png' %}" alt="Brings
+  the user to previous page" style="float: left" height="90" width="200"></a>
+  </div>
+
+  <div class="logout">
+    {% load static %}
+    <center><a href="/CHproto/logout"><input type="image" src="{% static 'posts/logout.jpg' %}" alt=
+      "Logs the user out" style="float: right" height="65" width=
+      "150"></a></center>
+  </div>
+
+  <div class="home">
+      {% load static %}
+      <center><a href="/CHproto/profile"><input type="image" src="{% static 'posts/home_button.png' %}"
+        alt="Brings the user to the homepage" stlyle="float: right"
+        height="75" width="100"/></a></center>
+  </div>
+
+<div class="container">
+
+<h1>Course attendance for {{ course.name }}</h1>
+<!-- Create a table that will display the student name, month 1 total attendance, month 2 total attendance,
+     month 3 total attendance, month 4 total attendance and the overall attendance. -->
+    <center><table>
+      <tr>
+        <th>Student</th>
+        <th>Month 1 total</th>
+        <th>Month 2 total</th>
+        <th>Month 3 total</th>
+        <th>Month 4 total</th>
+        <th>Overall</th>
+        <th></th>
+      </tr>
+
+    <!-- Each value in month 1 total, month 2 total, month 3 total, month 4 total and overall will have a value
+         displayed. To see the graphical representation, click one of the values to see it. -->
+      <tr>
+    {% for student, totals in all_totals.items %}
+        <td>{{ student.last_name }}, {{ student.first_name}}</td>
+        <td>
+          <a href="/CHproto/{{student.id}}/{{course.id}}/1/GraphStudentAttendanceMonth"><input type="submit" value="{{ totals.0 }}" title="Graph by Month">
+        </td>
+        <td>
+          <a href="/CHproto/{{student.id}}/{{course.id}}/2/GraphStudentAttendanceMonth"><input type="submit" value="{{ totals.1 }}" title="Graph by Month">
+        </td>
+        <td>
+          <a href="/CHproto/{{student.id}}/{{course.id}}/3/GraphStudentAttendanceMonth"><input type="submit" value="{{ totals.2 }}" title="Graph by Month">
+        </td>
+        <td>
+          <a href="/CHproto/{{student.id}}/{{course.id}}/4/GraphStudentAttendanceMonth"><input type="submit" value="{{ totals.3 }}" title="Graph by Month">
+        </td>
+        <td>
+          <a href="/CHproto/{{student.id}}/{{course.id}}/GraphStudentAttendanceOverall"><input type="submit" value="{{ totals.4 }}" title="Graph by Semester">
+        </td>
+
+        <!-- Adding new attendance for the student button -->
+        <td>
+          <a href="/CHproto/{{student.id}}/{{course.id}}/addattendance"><input class="submit_button" type="submit" value="ADD NEW ATTENDANCE"></input></a>
+          <br>
+            <a href="/CHproto/{{student.id}}/{{course.id}}/viewstudentattendance"><input class="submit_button" type="submit" value="VIEW/EDIT ATTENDANCE"></input></a>
+
+        </td>
+
+    </tr>
+    {% endfor %}
+
+    <tr>
+        <td>
+          All
+        </td>
+        <td>
+          <a href="/CHproto/{{course.id}}/1/GraphClassAttendanceMonth/"><input type="submit" value="{{ m_grand_total.0 }}" title="Graph by Month">
+        </td>
+        <td>
+          <a href="/CHproto/{{course.id}}/2/GraphClassAttendanceMonth/"><input type="submit" value="{{ m_grand_total.1 }}" title="Graph by Month">
+        </td>
+        <td>
+          <a href="/CHproto/{{course.id}}/3/GraphClassAttendanceMonth/"><input type="submit" value="{{ m_grand_total.2 }}" title="Graph by Month">
+        </td>
+        <td>
+          <a href="/CHproto/{{course.id}}/4/GraphClassAttendanceMonth/"><input type="submit" value="{{ m_grand_total.3 }}" title="Graph by Month">
+        </td>
+        <td>
+
+          <a href="/CHproto/{{course.id}}/GraphClassAttendanceOverall/"><input type="submit" value="{{ grand_total.0 }}" title="Graph by Semester">
+        </td>
+        <td></td>
+    </tr>
+
+    </table></center>
+
+<br><br>
+<!-- Display table for month 1 which has week 1 total, week 2 total, week 3 total and week 4 total -->
+<ul>Month 1</ul>
+        <center><table>
+      <tr>
+        <th>Student</th>
+        <th>Week 1 total</th>
+        <th>Week 2 total</th>
+        <th>Week 3 total</th>
+        <th>Week 4 total</th>
+      </tr>
+    <!-- Each value in month 1 (week 1, week 2, week 3, week 4) will have a value
+     displayed. To see the graphical representation of that week of the student, click one of the values to see it. -->
+      <tr>
+    {% for student, totals in week_totals.items %}
+        <td>{{ student.last_name }}, {{ student.first_name}}</td>
+        <td>
+          <a href="/CHproto/{{student.id}}/{{course.id}}/1/GraphStudentAttendanceWeek"><input type="submit" value="{{ totals.0 }}" title="Graph by Week">
+        </td>
+        <td>
+          <a href="/CHproto/{{student.id}}/{{course.id}}/2/GraphStudentAttendanceWeek"><input type="submit" value="{{ totals.1 }}" title="Graph by Week">
+        </td>
+        <td>
+          <a href="/CHproto/{{student.id}}/{{course.id}}/3/GraphStudentAttendanceWeek"><input type="submit" value="{{ totals.2 }}" title="Graph by Week">
+        </td>
+        <td>
+          <a href="/CHproto/{{student.id}}/{{course.id}}/4/GraphStudentAttendanceWeek"><input type="submit" value="{{ totals.3 }}" title="Graph by Week">
+        </td>
+
+            </tr>
+    {% endfor %}
+
+        <tr>
+        <td>
+          All
+        </td>
+        <td>
+          <a href="/CHproto/{{course.id}}/1/GraphClassAttendanceMonth/"><input type="submit" value="{{ w_grand_total.0 }}" title="Graph by Week">
+        </td>
+        <td>
+          <a href="/CHproto/{{course.id}}/2/GraphClassAttendanceMonth/"><input type="submit" value="{{ w_grand_total.1 }}" title="Graph by Week">
+        </td>
+        <td>
+          <a href="/CHproto/{{course.id}}/3/GraphClassAttendanceMonth/"><input type="submit" value="{{ w_grand_total.2 }}" title="Graph by Week">
+        </td>
+        <td>
+          <a href="/CHproto/{{course.id}}/4/GraphClassAttendanceMonth/"><input type="submit" value="{{ w_grand_total.3 }}" title="Graph by Week">
+        </td>
+    </tr>
+
+    </table></center>
+
+
+<br><br>
+<!-- Display table for month 2 which has week 5 total, week 6 total, week 7 total and week 8 total -->
+<ul>Month 2</ul>
+        <center><table>
+      <tr>
+        <th>Student</th>
+        <th>Week 5 total</th>
+        <th>Week 6 total</th>
+        <th>Week 7 total</th>
+        <th>Week 8 total</th>
+      </tr>
+        <!-- Each value in month 2 (week 5, week 6, week 7, week 8) will have a value
+     displayed. To see the graphical representation of that week of the student, click one of the values to see it. -->
+      <tr>
+    {% for student, totals in week_totals.items %}
+        <td>{{ student.last_name }}, {{ student.first_name}}</td>
+
+        <td>
+          <a href="/CHproto/{{student.id}}/{{course.id}}/5/GraphStudentAttendanceWeek"><input type="submit" value="{{ totals.4 }}" title="Graph by Week">
+        </td>
+        <td>
+          <a href="/CHproto/{{student.id}}/{{course.id}}/6/GraphStudentAttendanceWeek"><input type="submit" value="{{ totals.5 }}" title="Graph by Week">
+        </td>
+        <td>
+          <a href="/CHproto/{{student.id}}/{{course.id}}/7/GraphStudentAttendanceWeek"><input type="submit" value="{{ totals.6 }}" title="Graph by Week">
+        </td>
+        <td>
+          <a href="/CHproto/{{student.id}}/{{course.id}}/8/GraphStudentAttendanceWeek"><input type="submit" value="{{ totals.7 }}" title="Graph by Week">
+        </td>
+
+
+            </tr>
+    {% endfor %}
+            <tr>
+        <td>
+          All
+        </td>
+        <td>
+          <a href="/CHproto/{{course.id}}/5/GraphClassAttendanceMonth/"><input type="submit" value="{{ w_grand_total.4 }}" title="Graph by Week">
+        </td>
+        <td>
+          <a href="/CHproto/{{course.id}}/6/GraphClassAttendanceMonth/"><input type="submit" value="{{ w_grand_total.5 }}" title="Graph by Week">
+        </td>
+        <td>
+          <a href="/CHproto/{{course.id}}/7/GraphClassAttendanceMonth/"><input type="submit" value="{{ w_grand_total.6 }}" title="Graph by Week">
+        </td>
+        <td>
+          <a href="/CHproto/{{course.id}}/8/GraphClassAttendanceMonth/"><input type="submit" value="{{ w_grand_total.7 }}" title="Graph by Week">
+        </td>
+    </tr>
+  </table></center>
+
+<br><br>
+
+<!-- Display table for month 3 which has week 9 total, week 10 total, week 11 total and week 12 total -->
+<ul>Month 3</ul>
+        <center><table>
+      <tr>
+        <th>Student</th>
+        <th>Week 9 total</th>
+        <th>Week 10 total</th>
+        <th>Week 11 total</th>
+        <th>Week 12 total</th>
+      </tr>
+        <!-- Each value in month 3 (week 9, week 10, week 11, week 12) will have a value
+     displayed. To see the graphical representation of that week of the student, click one of the values to see it. -->
+      <tr>
+    {% for student, totals in week_totals.items %}
+        <td>{{ student.last_name }}, {{ student.first_name}}</td>
+
+        <td>
+          <a href="/CHproto/{{student.id}}/{{course.id}}/9/GraphStudentAttendanceWeek"><input type="submit" value="{{ totals.8 }}" title="Graph by Week">
+        </td>
+        <td>
+          <a href="/CHproto/{{student.id}}/{{course.id}}/10/GraphStudentAttendanceWeek"><input type="submit" value="{{ totals.9 }}" title="Graph by Week">
+        </td>
+        <td>
+          <a href="/CHproto/{{student.id}}/{{course.id}}/11/GraphStudentAttendanceWeek"><input type="submit" value="{{ totals.10 }}" title="Graph by Week">
+        </td>
+        <td>
+          <a href="/CHproto/{{student.id}}/{{course.id}}/12/GraphStudentAttendanceWeek"><input type="submit" value="{{ totals.11 }}" title="Graph by Week">
+        </td>
+
+
+            </tr>
+    {% endfor %}
+    <tr>
+        <td>
+          All
+        </td>
+        <td>
+          <a href="/CHproto/{{course.id}}/9/GraphClassAttendanceMonth/"><input type="submit" value="{{ w_grand_total.8 }}" title="Graph by Week">
+        </td>
+        <td>
+          <a href="/CHproto/{{course.id}}/10/GraphClassAttendanceMonth/"><input type="submit" value="{{ w_grand_total.9 }}" title="Graph by Week">
+        </td>
+        <td>
+          <a href="/CHproto/{{course.id}}/11/GraphClassAttendanceMonth/"><input type="submit" value="{{ w_grand_total.10 }}" title="Graph by Week">
+        </td>
+        <td>
+          <a href="/CHproto/{{course.id}}/12/GraphClassAttendanceMonth/"><input type="submit" value="{{ w_grand_total.11 }}" title="Graph by Week">
+        </td>
+
+    </tr>
+    </table></center>
+
+<br><br>
+<!-- Display table for month 3 which has week 13 total, week 14 total, week 15 total and week 16 total -->
+<ul>Month 4</ul>
+        <center><table>
+      <tr>
+        <th>Student</th>
+        <th>Week 13 total</th>
+        <th>Week 14 total</th>
+        <th>Week 15 total</th>
+        <th>Week 16 total</th>
+
+      </tr>
+        <!-- Each value in month 4 (week 13, week 14, week 15, week 16) will have a value
+     displayed. To see the graphical representation of that week of the student, click one of the values to see it. -->
+      <tr>
+    {% for student, totals in week_totals.items %}
+        <td>{{ student.last_name }}, {{ student.first_name}}</td>
+        <td>
+          <a href="/CHproto/{{student.id}}/{{course.id}}/13/GraphStudentAttendanceWeek"><input type="submit" value="{{ totals.12 }}" title="Graph by Week">
+        </td>
+        <td>
+          <a href="/CHproto/{{student.id}}/{{course.id}}/14/GraphStudentAttendanceWeek"><input type="submit" value="{{ totals.13 }}" title="Graph by Week">
+        </td>
+        <td>
+          <a href="/CHproto/{{student.id}}/{{course.id}}/15/GraphStudentAttendanceWeek"><input type="submit" value="{{ totals.14 }}" title="Graph by Week">
+        </td>
+        <td>
+          <a href="/CHproto/{{student.id}}/{{course.id}}/16/GraphStudentAttendanceWeek"><input type="submit" value="{{ totals.15 }}" title="Graph by Week">
+        </td>
+
+    </tr>
+    {% endfor %}
+            <tr>
+        <td>
+          All
+        </td>
+        <td>
+          <a href="/CHproto/{{course.id}}/13/GraphClassAttendanceMonth/"><input type="submit" value="{{ w_grand_total.12 }}" title="Graph by Week">
+        </td>
+        <td>
+          <a href="/CHproto/{{course.id}}/14/GraphClassAttendanceMonth/"><input type="submit" value="{{ w_grand_total.13 }}" title="Graph by Week">
+        </td>
+        <td>
+          <a href="/CHproto/{{course.id}}/15/GraphClassAttendanceMonth/"><input type="submit" value="{{ w_grand_total.14 }}" title="Graph by Week">
+        </td>
+        <td>
+          <a href="/CHproto/{{course.id}}/16/GraphClassAttendanceMonth/"><input type="submit" value="{{ w_grand_total.15 }}" title="Graph by Week">
+        </td>
+    </tr>
+    </table></center>
+
+<br><br>
+
+</div>
+
+<div>
+<form action='posts.html'>
+{% load static %}
+<input id="help_button" type="image" src="{% static 'posts/help_button.png' %}" style="float: left">
+</form>
+</div>
+
+</body></center>
+</html>

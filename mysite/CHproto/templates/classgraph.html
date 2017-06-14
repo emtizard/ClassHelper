@@ -1,0 +1,199 @@
+<!-- This page will show the user the pie chart displaying the full, tardy and absent status of students in specific course -->
+<!-- The user can watch the graph by week, month and semester -->
+<!-- The user can also email the graph -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Graph</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="#">
+   <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+      <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+
+      // Load the Visualization API and the corechart package.
+      google.charts.load('current', {'packages':['corechart']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.charts.setOnLoadCallback(drawChart);
+
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function drawChart() {
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Attendance');
+        data.addColumn('number', 'Number of Days');
+        data.addRows([
+          ['Absent Excused', {{ f_a_t.1 }} ],
+          ['Absent Unexcused',  {{ f_a_t.2 }} ],
+          ['Tardy',  {{ f_a_t.3 }} ],
+          ['Full', {{ f_a_t.0 }} ],
+        ]);
+
+        // Set chart options
+        var options = {'title':'Attendance for {{ time_period }}',
+                       'width':330,
+                       'height':300};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+        var table = new google.visualization.DataTable(document.getElementById('table_div'));
+        chart.draw(data, options);
+      }
+    </script>
+  <style type="text/css">
+    #back_button {
+	  	float:left;
+	  	alt: Brings the user back to the previous page;
+	  	height: 90px;
+	  	width:200px;
+	}
+	#home_button {
+	  	alt: Brings the user back to the home page;
+	  	height:90px;
+	  	width:200px;
+	}
+	#logout_button {
+	  	float:right;
+	  	alt:Submit;
+	  	height:50px;
+	  	width:200px;
+	  	alt: Brings the user back to the login page;
+	}
+	#help_button {
+		alt:Submit;
+		height:45px;
+		width:200px;
+		alt: Navigates the user to the help documents;
+	}
+    h1 {
+		font-family: "Copperplate Gothic Light";
+		font-size: 46px;
+		font-style: normal;
+		font-variant: normal;
+		font-weight: 1250;
+		line-height: 36.4px;
+		color: white;
+		text-align: center;
+		alt: Giving the title name of the page a size;
+		/*text-transform: uppercase; */
+	}
+    .container {
+		background: #869375;
+		white-space: nowrap;
+		height: auto;
+		width: 90%;
+		alt: The display of the content within the graph page has been formatted;
+	}
+	ul {
+		font-family: "Copperplate Gothic Light";
+	    font-size: 30px;
+	    font-style: normal;
+	    font-variant: normal;
+	    font-weight: 1250;
+		color: white;
+		text-align: center;
+		alt: Formatted the unordered list text;
+    }
+	.save_button {
+		height: 50px;
+	    width: 300px;
+		color: white;
+		background-color:#384130;
+		font-size:30px;
+		alt: Formatting the save button;
+    }
+	@media only screen and (max-width: 768px) {
+		/* For mobile phones: */
+		h1 {
+			font-size: 23px;
+			alt: Formatted so that the title fits mobile size;
+		}
+		#help_button {
+			height: 30px;
+			width: 100px;
+			alt: formatted so that the help button fits mobile size;
+		}
+		#back_button {
+			height: 45px;
+			width: 100px;
+			alt: formatted so that the back_button fits mobile size;
+		}
+		#logout_button {
+			float:right;
+			alt:Submit;
+			height:25px;
+			width:100px;
+			alt: formatted so that the logout button fits mobile size;
+		}
+		#home_button {
+			height:45px;
+			width:100px;
+			alt: formatted so that the home button fits mobile size;
+		}
+		.save_button {
+			height: 25px;
+			width: 150px;
+			font-size:15px;
+			alt: formatted so that the save button fits mobile size;
+		}
+		ul {
+			font-size: 10px;
+			alt: formatted so that the unordered list text fits mobile size;
+		}
+	}
+  </style>
+
+</head>
+<body bgcolor="#384130">
+
+  <div class="back">
+  {% load static %}
+  <input id="back_button" onclick="window.history.back()" type="image" src="{% static 'posts/back_button.png' %}" alt="Brings
+  the user to previous page" style="float: left" height="90" width="200"></a>
+  </div>
+
+  <div class="logout">
+    {% load static %}
+    <center><a href="/CHproto/logout"><input type="image" src="{% static 'posts/logout.jpg' %}" alt=
+      "Logs the user out" style="float: right" height="65" width=
+      "150"></a></center>
+  </div>
+
+  <div class="home">
+      {% load static %}
+      <center><a href="/CHproto/profile"><input type="image" src="{% static 'posts/home_button.png' %}"
+        alt="Brings the user to the homepage" stlyle="float: right"
+        height="75" width="100"/></a></center>
+  </div>
+
+<!-- Display the graph page content -->
+<!-- The "Email Student Graph" button will send an email -->
+<center><div class="container">
+    <div id="table_div"></div>
+    <div class="form-container">
+    <form>
+		<h1 name="coursename">{{ course.name }}<br></h1>
+		<!--Div that will hold the pie chart-->
+		<div id="chart_div"></div>
+		<br>
+		<!--<input type="submit" value="Export to PDF" href="/home.html">-->
+    </form>
+    </div>
+</div></center>
+
+
+<!-- Setting up the help button -->
+<div>
+  {% load static %}
+  <a href="/CHproto/help"><input id="help_button" type="image" src="{% static 'posts/help_button.png' %}" alt="Help button"></a>
+</div>
+
+
+</body>
+</html>

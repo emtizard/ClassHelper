@@ -1,0 +1,117 @@
+
+<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+    <head>
+        <title>Add student</title>
+
+        <meta charset="utf-8" />
+        <title>PROTOTYPE</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="#">
+        <style type="text/css">
+          h1 {
+            font-family: "Copperplate Gothic Light";
+            font-size: 46px;
+            font-style: normal;
+            font-variant: normal;
+            font-weight: 1250;
+            line-height: 36.4px;
+            color: white;
+            text-align: center;
+            /*text-transform: uppercase; */
+          }
+          h2 {
+            font-family: "Copperplate Gothic Light";
+            font-size: 30px;
+            font-style: normal;
+            font-variant: normal;
+            font-weight: 1250;
+            line-height: 36.4px;
+            color: white;
+            text-align: center;
+            /*text-transform: uppercase; */
+          }
+          .container {
+            float: left;
+            clear: left;
+            display: flex;
+            background: #869375;
+            padding: 30px;
+            margin: 25px;
+            white-space: nowrap;
+            height: auto;
+            width: 80%;
+          }
+          .course-container {
+            padding: 5px;
+            float: left;
+            clear: left;
+            display: inline-block;
+            background: #4b5143;
+            white-space: nowrap;
+            width: 100%;
+            height: auto;
+          }
+          .submit {
+            height: 50px;
+            width: 150px;
+            float:right;
+          }
+        </style>
+    </head>
+
+    <body bgcolor="#384130">
+
+      <div class="back">
+      {% load static %}
+      <input id="back_button" onclick="window.history.back()" type="image" src="{% static 'posts/back_button.png' %}" alt="Brings
+      the user to previous page" style="float: left" height="90" width="200"></a>
+      </div>
+
+      <div class="logout">
+        {% load static %}
+        <center><a href="/CHproto/logout"><input type="image" src="{% static 'posts/logout.jpg' %}" alt=
+          "Logs the user out" style="float: right" height="65" width=
+          "150"></a></center>
+      </div>
+
+      <div class="home">
+  	      {% load static %}
+  	      <center><a href="/CHproto/profile"><input type="image" src="{% static 'posts/home_button.png' %}"
+  	        alt="Brings the user to the homepage" stlyle="float: right"
+  	        height="75" width="100"/></a></center>
+  	  </div>
+
+    <body>
+        <div class="page-header">
+              <h1>Add New Course</h1>
+        </div>
+
+        <div class="content container">
+
+            <div class="row">
+                <div class="col-md-8">
+                     {% block content %}
+
+                    <form method="POST" class="post-form">{% csrf_token %}
+                     {{ form.as_p }}
+
+                     <input type="hidden" name="next" value="{{ request.path }}">
+                    <button type="submit" class="save button">Save</button>
+
+                  </form>
+
+                    {% endblock %}
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Setting up the help button -->
+        <div>
+          {% load static %}
+          <a href="/CHproto/help"><input id="help_button" type="image" src="{% static 'posts/help_button.png' %}" alt="Help button"></a>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,202 @@
+<!-- The purpose of this page is to add attendance to a specific student. The user will be asked to enter the date of
+	 the attendance, attendance mark, either being absent excused or not, if needed tardy reason, hours attended,
+	 which week it was and which month it was. After all the information have been entered, user will press save and
+	 the attendance will be added to the student.
+-->
+<!DOCTYPE html>
+<html lang="en">
+	</head>
+		<meta charset="utf-8" />
+		<title>Edit Attendance</title>
+		<!-- Everything inside the block style is CSS (Cascading Style Sheets), which is is computer language responsible
+	   	for formatting the language. -->
+  		<!-- This page extends to the base.html page which has some formatting that will be used for all pages as
+	   	default.-->
+  		<!-- To find out where the formatting is done, search for the class or id within the tags (class = .)(id = #) -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="icon" href="#">
+		<style type="text/css">
+			#back_button {
+	  			float:left;
+	  			alt: Brings the user back to the previous page;
+	  			height: 90px;
+	  			width:200px;
+			}
+			#home_button {
+	  			alt: Brings the user back to the home page;
+	  			height:90px;
+	  			width:200px;
+			}
+			#logout_button {
+	  			float:right;
+	  			alt:Submit;
+	  			height:50px;
+	  			width:200px;
+	  			alt: Brings the user back to the login page;
+			}
+			#help_button {
+				alt:Submit;
+				height:45px;
+				width:200px;
+				alt: Navigates the user to the help documents;
+			}
+			h1 {
+				font-family: "Copperplate Gothic Light";
+				font-size: 46px;
+				font-style: normal;
+				font-variant: normal;
+				font-weight: 1250;
+				line-height: 36.4px;
+				color: white;
+				text-align: center;
+				alt: Giving the title name of the page a size;
+				/*text-transform: uppercase; */
+			}
+			form {
+				background-color: #889277;
+				color: white;
+        		font-size: 25px;
+        		width:70%;
+        		alt: formatting the form;
+			}
+			form p {
+        		font-size: 20px;
+        		alt: Giving the form a specific text size;
+        	}
+        	.save_button{
+        		height: 50px;
+	    		width: 200px;
+				color: white;
+				background-color:#384130;
+				font-size:30px;
+				alt: Formatting the save button;
+    		}
+			table {
+				border: 3px solid black;
+				border-collapse: collapse;
+				alt: Adjusting how the table will display the roster content.;
+			}
+			th, td {
+				border: 1px solid black;
+				width: auto;
+				background-color: white;
+				text-align: center;
+				border-collapse: collapse;
+				padding: 7.1px;
+				alt: Adjusting the table display even deeper (text, positioning, border color etc.);
+			}
+			th {
+				background-color: #384130;
+				color: white;
+				alt: Give table headers a specific background color and text color;
+			}
+    		@media only screen and (max-width: 768px) {
+        		/* For mobile phones: */
+        		h1 {
+          			display: none;
+          			alt: formatted so that the title fits mobile size;
+        		}
+	    		#help_button {
+		  			height: 30px;
+		  			width: 100px;
+		  			alt: formatted so that the help button fits mobile size;
+				}
+				#back_button {
+		  			height: 45px;
+		  			width: 100px;
+		  			alt: formatted so that the back_button fits mobile size;
+				}
+				#logout_button {
+		  			float:right;
+		  			alt:Submit;
+		  			height:25px;
+		  			width:100px;
+		  			alt: formatted so that the logout button fits mobile size;
+				}
+				#home_button {
+		  			height:45px;
+		  			width:100px;
+		  			alt: formatted so that the home button fits mobile size;
+				}
+				.save_button {
+		        	height: 25px;
+		       	 	width: 75px;
+		        	font-size:15px;
+		        	alt: formatted so that the save button fits mobile size
+				}
+				table {
+					display: block;
+					overflow: scroll;
+					overflow-y: auto;
+				}
+			}
+		</style>
+		<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+	</head>
+	<body bgcolor="#384130">
+		<!-- Setting up the back button -->
+		<div class="back">
+		{% load static %}
+		<input id="back_button" type="image" onclick="window.history.back()" src="{% static 'posts/back_button.png' %}">
+		</div>
+		<!-- Setting up the logout button -->
+		<div class="logout">
+		{% load static %}
+		<a href="/CHproto/logout"><input id="logout_button" type="image" src="{% static 'posts/logout.jpg' %}" alt="Logs the user out"></a>
+		</div>
+		<!-- Setting up the home page button -->
+		<div class="home">
+	      {% load static %}
+	      <center><a href="/CHproto/profile"><input type="image" src="{% static 'posts/home_button.png' %}"
+	        alt="Brings the user to the homepage" stlyle="float: right"
+	        height="75" width="100"/></a></center>
+	  </div>
+		<!-- Display the content on the add attendance page. The content is setup as a form -->
+		<!-- Once everything is correctly filled in, user will press save button to add attendance to specific student
+		-->
+		<div bgcolor="#869375">
+		<h1>{{ student.last_name}}, {{student.first_name }}</h1>
+
+		{% if student_attendances %}
+		    <table>
+		      <tr>
+		        <th>Date</th>
+		        <th>Attendance mark</th>
+						<th>Hours attended</th>
+		        <th>Week</th>
+		        <th>Month</th>
+		        <th>Excused (if absent)</th>
+		        <th>Reason (if tardy)</th>
+				<th></th>
+				<th></th>
+		        <th></th>
+		      </tr>
+		    {% for attendance in student_attendances %}
+		      <tr>
+		        <td>{{ attendance.date }}</td>
+		        <td>{{ attendance.attendance_mark }}</td>
+		        <td>{{ attendance.hours_attended }}</td>
+		        <td>{{ attendance.week_number }}</td>
+		        <td>{{ attendance.month_number }}</td>
+		        <td>{{ attendance.absent_excused }}</td>
+	        	<td>{{ attendance.tardy_reason }}</td>
+
+		        <td><a href="/CHproto/{{student.id}}/{{course.id}}/{{ attendance.id}}/editstudentattendance"><button class="att">EDIT ATTENDANCE</button></a></td>
+
+						<td><a href="/CHproto/{{student.id}}/{{course.id}}/{{attendance.id}}/removeattendance"><button class="rmatt" onclick="return confirm('Are you sure?')">DELETE ATTENDANCE</button></a></td>
+
+
+		      </tr>
+		    {% endfor %}
+		    </table>
+		  {% endif %}
+		  </div>
+
+			<!-- Setting up the help button -->
+		  <div>
+		    {% load static %}
+		    <a href="/CHproto/help"><input id="help_button" type="image" src="{% static 'posts/help_button.png' %}" alt="Help button"></a>
+		  </div>
+
+</body>
+</html>
